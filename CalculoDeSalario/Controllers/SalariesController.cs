@@ -19,7 +19,6 @@ namespace CalculoDeSalario.Controllers
         // GET: Salaries
         public async Task<IActionResult> Index()
         {
-            peopleRepository.BuscarPessoas();
             var buscarSalarios = salaryRepository.BuscarSalarios();
             return View(buscarSalarios);
         }

@@ -68,6 +68,29 @@ namespace CalculoDeSalario.Migrations
                     b.ToTable("Salary");
                 });
 
+            modelBuilder.Entity("CalculoDeSalario.Models.TotalCost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CostDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PeopleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SalaryCostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeopleId");
+
+                    b.ToTable("TotalCost");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -271,6 +294,17 @@ namespace CalculoDeSalario.Migrations
                 });
 
             modelBuilder.Entity("CalculoDeSalario.Models.Salary", b =>
+                {
+                    b.HasOne("CalculoDeSalario.Models.People", "People")
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("People");
+                });
+
+            modelBuilder.Entity("CalculoDeSalario.Models.TotalCost", b =>
                 {
                     b.HasOne("CalculoDeSalario.Models.People", "People")
                         .WithMany()

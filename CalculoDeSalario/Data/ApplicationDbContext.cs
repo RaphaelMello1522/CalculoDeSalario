@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using CalculoDeSalario.Models;
 
 namespace CalculoDeSalario.Data
 {
@@ -16,6 +17,7 @@ namespace CalculoDeSalario.Data
         }
         public DbSet<CalculoDeSalario.Models.Salary> Salary { get; set; } = default!;
         public DbSet<CalculoDeSalario.Models.People> People { get; set; } = default!;
+        public DbSet<CalculoDeSalario.Models.TotalCost> TotalCost { get; set; } = default!;
 
 
     }

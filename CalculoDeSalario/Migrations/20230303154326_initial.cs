@@ -54,13 +54,13 @@ namespace CalculoDeSalario.Migrations
                 name: "People",
                 columns: table => new
                 {
-                    PeopleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ValueHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_People", x => x.PeopleId);
+                    table.PrimaryKey("PK_People", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,11 +174,11 @@ namespace CalculoDeSalario.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PeopleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TimeWorkStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TimeWorkEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalTimeWorked = table.Column<TimeSpan>(type: "time", nullable: false),
-                    Total = table.Column<double>(type: "float", nullable: false),
-                    PeopleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Total = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,7 +187,27 @@ namespace CalculoDeSalario.Migrations
                         name: "FK_Salary_People_PeopleId",
                         column: x => x.PeopleId,
                         principalTable: "People",
-                        principalColumn: "PeopleId",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TotalCost",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PeopleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SalaryCostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CostDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TotalCost", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TotalCost_People_PeopleId",
+                        column: x => x.PeopleId,
+                        principalTable: "People",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -234,6 +254,11 @@ namespace CalculoDeSalario.Migrations
                 name: "IX_Salary_PeopleId",
                 table: "Salary",
                 column: "PeopleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TotalCost_PeopleId",
+                table: "TotalCost",
+                column: "PeopleId");
         }
 
         /// <inheritdoc />
@@ -256,6 +281,9 @@ namespace CalculoDeSalario.Migrations
 
             migrationBuilder.DropTable(
                 name: "Salary");
+
+            migrationBuilder.DropTable(
+                name: "TotalCost");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

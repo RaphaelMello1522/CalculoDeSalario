@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalculoDeSalario.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230303005423_initial2")]
-    partial class initial2
+    [Migration("20230303154326_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,29 @@ namespace CalculoDeSalario.Migrations
                     b.HasIndex("PeopleId");
 
                     b.ToTable("Salary");
+                });
+
+            modelBuilder.Entity("CalculoDeSalario.Models.TotalCost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CostDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PeopleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SalaryCostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeopleId");
+
+                    b.ToTable("TotalCost");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -274,6 +297,17 @@ namespace CalculoDeSalario.Migrations
                 });
 
             modelBuilder.Entity("CalculoDeSalario.Models.Salary", b =>
+                {
+                    b.HasOne("CalculoDeSalario.Models.People", "People")
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("People");
+                });
+
+            modelBuilder.Entity("CalculoDeSalario.Models.TotalCost", b =>
                 {
                     b.HasOne("CalculoDeSalario.Models.People", "People")
                         .WithMany()

@@ -33,10 +33,9 @@ namespace CalculoDeSalario.Repository
         {
             var salaryList = new List<Salary>();
             var salary = new Salary();
-            var peopleRepository = new PeopleRepository(context);
-            peopleRepository.BuscarPessoas();
+            var salaryContext = context.Salary.Include("People");
 
-            foreach (var item in context.Salary.Include("People"))
+            foreach (var item in salaryContext)
             {
                 salary.Id = item.Id;
                 salary.TimeWorkStart = item.TimeWorkStart;
