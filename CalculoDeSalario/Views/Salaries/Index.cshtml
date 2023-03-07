@@ -6,28 +6,38 @@
     var culture = CultureInfo.GetCultureInfo("pt-BR");
 }
 
-<h1>Index</h1>
+<style>
+    .modal-title {
+        text-align: center;
+        background: -webkit-linear-gradient( #00ffd7, #Ff00e0 );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+
+</style>
+<h2 class="modal-title">Tempo de Trabalho</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Nova Entrada</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.People.Name)
+                Nome
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.People.ValueHour)
+                Valor Hora
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TimeWorkStart)
+                Entrada
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TimeWorkEnd)
+                Saída
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TotalTimeWorked)
+                Total de Horas
             </th>
             <th>
                 Total R$
@@ -54,7 +64,7 @@
                     @Html.DisplayFor(modelItem => item.TotalTimeWorked)
                 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Total)
+                    @string.Format("{0:R$0.00}", item.Total)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -64,4 +74,9 @@
         </tr>
 }
     </tbody>
+    @{
+        var total = string.Format("{0:R$0.00}", Model.Sum(x => x.Total));
+        <tfoot class="footer"><cache><b>@total</b></cache></tfoot>
+    }
 </table>
+
