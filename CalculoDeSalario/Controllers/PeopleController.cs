@@ -1,6 +1,7 @@
 ﻿using CalculoDeSalario.Data;
 using CalculoDeSalario.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalculoDeSalario.Controllers
@@ -8,10 +9,13 @@ namespace CalculoDeSalario.Controllers
     public class PeopleController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public PeopleController(ApplicationDbContext context)
+
+        public PeopleController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         // GET: People
@@ -30,7 +34,7 @@ namespace CalculoDeSalario.Controllers
                 return NotFound();
             }
 
-            var people = await _context.People
+            var people = await _context.People.Include("Cargo")
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (people == null)
             {
@@ -43,6 +47,7 @@ namespace CalculoDeSalario.Controllers
         // GET: People/Create
         public IActionResult Create()
         {
+            PopulateSelect();
             return View();
         }
 
@@ -51,19 +56,24 @@ namespace CalculoDeSalario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ValueHour")] People people)
+        public async Task<IActionResult> Create(People people)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(people);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(people);
+            people.Id = Guid.NewGuid();
+
+            var cargoPerson = _context.Cargo.ToList().Where(s => s.Id.Equals(people.CargoId));
+
+            string uniqueFileName = UploadedFile(people);
+
+            people.PictureSource = uniqueFileName;
+
+            _context.Add(people);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: People/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.People == null)
             {
@@ -83,7 +93,7 @@ namespace CalculoDeSalario.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,ValueHour")] People people)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,ValueHour,PictureSource")] People people)
         {
             if (id != people.Id)
             {
@@ -153,6 +163,31 @@ namespace CalculoDeSalario.Controllers
         private bool PeopleExists(Guid id)
         {
             return (_context.People?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private string UploadedFile(People model)
+        {
+            string uniqueFileName = null;
+
+            if (model.ProfilePicture != null)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                uniqueFileName = model.ProfilePicture.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.ProfilePicture.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+        }
+
+        private void PopulateSelect(object CargoSelecionado = null)
+        {
+            var cargoQuery = _context.Cargo.AsNoTracking().ToList();
+
+            ViewBag.CargoId = new SelectList(cargoQuery, "Id", "NomeCargo", CargoSelecionado);
+            return;
         }
     }
 }

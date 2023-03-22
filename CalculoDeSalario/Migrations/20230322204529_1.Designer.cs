@@ -12,18 +12,39 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalculoDeSalario.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230303154326_initial")]
-    partial class initial
+    [Migration("20230322204529_1")]
+    partial class _1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CalculoDeSalario.Models.Cargo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DescricaoCargo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomeCargo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ValueHour")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cargo");
+                });
 
             modelBuilder.Entity("CalculoDeSalario.Models.People", b =>
                 {
@@ -31,7 +52,14 @@ namespace CalculoDeSalario.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CargoId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PictureSource")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -40,6 +68,8 @@ namespace CalculoDeSalario.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CargoId");
+
                     b.ToTable("People");
                 });
 
@@ -47,6 +77,9 @@ namespace CalculoDeSalario.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CargoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PeopleId")
@@ -71,27 +104,33 @@ namespace CalculoDeSalario.Migrations
                     b.ToTable("Salary");
                 });
 
-            modelBuilder.Entity("CalculoDeSalario.Models.TotalCost", b =>
+            modelBuilder.Entity("CalculoDeSalario.Models.Vagas", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CostDescription")
+                    b.Property<Guid?>("CandidatosVagaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CardImgUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescricaoVaga")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomeVaga")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("PeopleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SalaryCostId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<decimal?>("Salario")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PeopleId");
+                    b.HasIndex("CandidatosVagaId");
 
-                    b.ToTable("TotalCost");
+                    b.ToTable("Vagas");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -296,6 +335,17 @@ namespace CalculoDeSalario.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CalculoDeSalario.Models.People", b =>
+                {
+                    b.HasOne("CalculoDeSalario.Models.Cargo", "Cargo")
+                        .WithMany()
+                        .HasForeignKey("CargoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cargo");
+                });
+
             modelBuilder.Entity("CalculoDeSalario.Models.Salary", b =>
                 {
                     b.HasOne("CalculoDeSalario.Models.People", "People")
@@ -307,15 +357,13 @@ namespace CalculoDeSalario.Migrations
                     b.Navigation("People");
                 });
 
-            modelBuilder.Entity("CalculoDeSalario.Models.TotalCost", b =>
+            modelBuilder.Entity("CalculoDeSalario.Models.Vagas", b =>
                 {
-                    b.HasOne("CalculoDeSalario.Models.People", "People")
+                    b.HasOne("CalculoDeSalario.Models.People", "CandidatosVaga")
                         .WithMany()
-                        .HasForeignKey("PeopleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CandidatosVagaId");
 
-                    b.Navigation("People");
+                    b.Navigation("CandidatosVaga");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

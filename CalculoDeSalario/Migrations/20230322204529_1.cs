@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CalculoDeSalario.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class _1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,16 +51,17 @@ namespace CalculoDeSalario.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "People",
+                name: "Cargo",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ValueHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    NomeCargo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescricaoCargo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ValueHour = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_People", x => x.Id);
+                    table.PrimaryKey("PK_Cargo", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,11 +171,33 @@ namespace CalculoDeSalario.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "People",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CargoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ValueHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PictureSource = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_People", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_People_Cargo_CargoId",
+                        column: x => x.CargoId,
+                        principalTable: "Cargo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Salary",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PeopleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CargoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TimeWorkStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TimeWorkEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalTimeWorked = table.Column<TimeSpan>(type: "time", nullable: false),
@@ -192,23 +215,24 @@ namespace CalculoDeSalario.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TotalCost",
+                name: "Vagas",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PeopleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SalaryCostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CostDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NomeVaga = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescricaoVaga = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Salario = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CardImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CandidatosVagaId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TotalCost", x => x.Id);
+                    table.PrimaryKey("PK_Vagas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TotalCost_People_PeopleId",
-                        column: x => x.PeopleId,
+                        name: "FK_Vagas_People_CandidatosVagaId",
+                        column: x => x.CandidatosVagaId,
                         principalTable: "People",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -251,14 +275,19 @@ namespace CalculoDeSalario.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_People_CargoId",
+                table: "People",
+                column: "CargoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Salary_PeopleId",
                 table: "Salary",
                 column: "PeopleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TotalCost_PeopleId",
-                table: "TotalCost",
-                column: "PeopleId");
+                name: "IX_Vagas_CandidatosVagaId",
+                table: "Vagas",
+                column: "CandidatosVagaId");
         }
 
         /// <inheritdoc />
@@ -283,7 +312,7 @@ namespace CalculoDeSalario.Migrations
                 name: "Salary");
 
             migrationBuilder.DropTable(
-                name: "TotalCost");
+                name: "Vagas");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -293,6 +322,9 @@ namespace CalculoDeSalario.Migrations
 
             migrationBuilder.DropTable(
                 name: "People");
+
+            migrationBuilder.DropTable(
+                name: "Cargo");
         }
     }
 }
