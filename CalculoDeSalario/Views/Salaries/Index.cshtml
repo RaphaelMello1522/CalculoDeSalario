@@ -52,7 +52,7 @@
                     @Html.DisplayFor(modelItem => item.People.Name)
                 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.People.ValueHour)
+                @string.Format("{0:R$0.00}", item.People.Cargo.ValueHour)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TimeWorkStart)

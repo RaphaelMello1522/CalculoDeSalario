@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalculoDeSalario.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230322204529_1")]
+    [Migration("20230322224520_1")]
     partial class _1
     {
         /// <inheritdoc />
@@ -63,8 +63,9 @@ namespace CalculoDeSalario.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("ValueHour")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Sexo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

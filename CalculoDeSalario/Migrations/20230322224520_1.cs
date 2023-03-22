@@ -177,7 +177,7 @@ namespace CalculoDeSalario.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CargoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ValueHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Sexo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PictureSource = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

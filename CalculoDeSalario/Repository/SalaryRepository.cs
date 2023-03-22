@@ -33,7 +33,7 @@ namespace CalculoDeSalario.Repository
         {
             var salaryList = new List<Salary>();
             var salary = new Salary();
-            var salaryContext = context.Salary.Include("People");
+            var salaryContext = context.Salary.Include("People").Include("People.Cargo");
 
             foreach (var item in salaryContext)
             {
@@ -41,7 +41,7 @@ namespace CalculoDeSalario.Repository
                 salary.TimeWorkStart = item.TimeWorkStart;
                 salary.TimeWorkEnd = item.TimeWorkEnd;
                 salary.TotalTimeWorked = item.TimeWorkEnd - item.TimeWorkStart;
-                salary.Total = salary.TotalTimeWorked.TotalHours * Convert.ToDouble(item.People.ValueHour);
+                salary.Total = salary.TotalTimeWorked.TotalHours * Convert.ToDouble(item.People.Cargo.ValueHour);
 
                 salaryList.Add(item);
             }

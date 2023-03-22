@@ -7,7 +7,7 @@ namespace CalculoDeSalario.Models
         public Guid Id { get; set; }
         public Guid CargoId { get; set; }
         public string Name { get; set; }
-        public decimal ValueHour { get; set; }
+        public string Sexo { get; set; }
         public string PictureSource { get; set; }
         [NotMapped]
         public IFormFile ProfilePicture { get; set; }

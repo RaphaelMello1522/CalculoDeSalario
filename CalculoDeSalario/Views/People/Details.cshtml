@@ -8,6 +8,7 @@
     .img-thumbnail{
         width: 300px;
         height: 240px;
+        border-radius: 50%
     }
 
     .h4{
@@ -19,7 +20,7 @@
     }
 
     .paragrafo{
-        text-align: right
+        text-align: justify
     }
 
     .titulo{
@@ -32,12 +33,20 @@
     }
 </style>
 
+
 <div class="row">
 <div class="col-md-12">
-<h4 class="titulo">Detalhes do Funcionário @Model.Name</h4>
+        @if(Model.Sexo == "Masculino")
+        {
+            <h4 class="titulo">Detalhes do Funcionário @Model.Name</h4>
+        }
+        else
+        {
+            <h4 class="titulo">Detalhes da Funcionária @Model.Name</h4>
+        }
 
 </div>
-        <p style="text-align: right; padding-left: 120px">Setor: @Model.Cargo.NomeCargo | Valor Hora: @Model.Cargo.ValueHour</p>
+    <p style="text-align: right; padding-left: 120px">Setor: @Model.Cargo.NomeCargo | Valor Hora: @string.Format("{0:R$0.00}", Model.Cargo.ValueHour)</p>
 </div>
 
 
@@ -47,9 +56,10 @@
         <div class="col-md-4">
             <img class="img-thumbnail" src="~/images/@Model.PictureSource" alt="erro">
             <br/>
-                <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model?.Id">Edit</a> |
-                <a type="button" asp-action="Delete" class="btn btn-danger" asp-route-id="@Model?.Id">Remover</a> |
-                <a asp-action="Index" class="btn btn-light">Back to List</a>
+            <br/>
+                <a asp-action="Edit"  asp-route-id="@Model?.Id">Editar</a> |
+                <a asp-action="Delete"  asp-route-id="@Model?.Id">Remover</a> |
+                <a asp-action="Index">Voltar</a>
 
         </div>
         <div class="col-md-7">
@@ -57,6 +67,7 @@
             <hr/>
 
             <p class="paragrafo">@Model.Cargo.DescricaoCargo</p>
+            <hr/>
 
         </div>
 

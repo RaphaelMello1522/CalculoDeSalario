@@ -27,6 +27,7 @@ namespace CalculoDeSalario.Repository
         public People BuscarPessoaPorId(Guid id)
         {
             return context.People.Find(id);
+
         }
 
         public IEnumerable<People> BuscarPessoas()
@@ -34,7 +35,7 @@ namespace CalculoDeSalario.Repository
             var peopleList = new List<People>();
             var people = new People();
 
-            foreach (var item in context.People.AsNoTracking())
+            foreach (var item in context.People.Include("Cargo").AsNoTracking())
             {
                 people.Id = item.Id;
                 people.Name = item.Name;

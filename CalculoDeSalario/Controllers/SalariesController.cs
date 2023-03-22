@@ -1,4 +1,5 @@
-﻿using CalculoDeSalario.Models;
+﻿using CalculoDeSalario.Data;
+using CalculoDeSalario.Models;
 using CalculoDeSalario.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,11 +10,13 @@ namespace CalculoDeSalario.Controllers
     {
         private ISalaryRepository salaryRepository;
         private IPeopleRepository peopleRepository;
+        private ApplicationDbContext context;
 
-        public SalariesController(ISalaryRepository salaryRepository, IPeopleRepository peopleRepository)
+        public SalariesController(ISalaryRepository salaryRepository, IPeopleRepository peopleRepository, ApplicationDbContext context)
         {
             this.salaryRepository = salaryRepository;
             this.peopleRepository = peopleRepository;
+            this.context = context;
         }
 
         // GET: Salaries
@@ -61,7 +64,7 @@ namespace CalculoDeSalario.Controllers
 
             foreach (var item in salaryPerson)
             {
-                salary.Total = salary.TotalTimeWorked.TotalHours * Convert.ToDouble(item.ValueHour);
+                salary.Total = salary.TotalTimeWorked.TotalHours * Convert.ToDouble(item.Cargo.ValueHour);
             }
 
             salaryRepository.AdicionarSalario(salary);
