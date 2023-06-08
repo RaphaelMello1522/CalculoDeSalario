@@ -3,6 +3,7 @@ using CalculoDeSalario.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 namespace CalculoDeSalario.Controllers
 {
@@ -10,19 +11,30 @@ namespace CalculoDeSalario.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment webHostEnvironment;
+        private IToastNotification _toastNotification;
 
 
-        public PeopleController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public PeopleController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IToastNotification toastNotification)
         {
             _context = context;
             this.webHostEnvironment = webHostEnvironment;
+            _toastNotification = toastNotification;
         }
 
         // GET: People
         public async Task<IActionResult> Index()
         {
+            var contextCount = _context.People.AsNoTracking().ToList().Count();
+            if (contextCount == 0)
+            {
+                _toastNotification.AddWarningToastMessage("Nenhum funcionário registrado");
+                return View(await _context.People.ToListAsync());
+            }
+
+            _toastNotification.AddWarningToastMessage(contextCount + " Funcionários registrados");
+
             return _context.People != null ?
-                        View(await _context.People.ToListAsync()) :
+                        View(await _context.People.AsNoTracking().ToListAsync()) :
                         Problem("Entity set 'ApplicationDbContext.People'  is null.");
         }
 
@@ -36,12 +48,17 @@ namespace CalculoDeSalario.Controllers
 
             var people = await _context.People.Include("Cargo")
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (people == null)
+
+            if (people.Sexo == "Feminino")
             {
-                return NotFound();
+                _toastNotification.AddInfoToastMessage("Detalhes da funcionária " + people.Name);
+            }
+            else
+            {
+                _toastNotification.AddInfoToastMessage("Detalhes do funcionário " + people.Name);
             }
 
-            return View(people);
+            return people == null ? NotFound() : View(people);
         }
 
         // GET: People/Create
@@ -68,6 +85,16 @@ namespace CalculoDeSalario.Controllers
 
             _context.Add(people);
             await _context.SaveChangesAsync();
+
+            if(people.Sexo == "Feminino")
+            {
+                _toastNotification.AddSuccessToastMessage("Funcionária " + people.Name + " registrada com sucesso!");
+            }
+            else
+            {
+                _toastNotification.AddSuccessToastMessage("Funcionário " + people.Name + " registrado com sucesso!");
+            }
+
             return RedirectToAction(nameof(Index));
 
         }
@@ -107,7 +134,7 @@ namespace CalculoDeSalario.Controllers
                     _context.Update(people);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
                 {
                     if (!PeopleExists(people.Id))
                     {

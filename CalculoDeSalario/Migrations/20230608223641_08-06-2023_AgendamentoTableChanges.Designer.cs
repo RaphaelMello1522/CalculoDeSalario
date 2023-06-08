@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalculoDeSalario.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230322224520_1")]
-    partial class _1
+    [Migration("20230608223641_08-06-2023_AgendamentoTableChanges")]
+    partial class _08062023_AgendamentoTableChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,25 @@ namespace CalculoDeSalario.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CalculoDeSalario.Models.Agendamento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataAgendamento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DatasAgendamentoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DatasAgendamentoId");
+
+                    b.ToTable("Agendamentos");
+                });
 
             modelBuilder.Entity("CalculoDeSalario.Models.Cargo", b =>
                 {
@@ -44,6 +63,20 @@ namespace CalculoDeSalario.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cargo");
+                });
+
+            modelBuilder.Entity("CalculoDeSalario.Models.DatasAgendamento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataDisponivel")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DatasAgendamentos");
                 });
 
             modelBuilder.Entity("CalculoDeSalario.Models.People", b =>
@@ -334,6 +367,17 @@ namespace CalculoDeSalario.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("CalculoDeSalario.Models.Agendamento", b =>
+                {
+                    b.HasOne("CalculoDeSalario.Models.DatasAgendamento", "DatasAgendamento")
+                        .WithMany()
+                        .HasForeignKey("DatasAgendamentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DatasAgendamento");
                 });
 
             modelBuilder.Entity("CalculoDeSalario.Models.People", b =>

@@ -1,6 +1,7 @@
 ﻿using CalculoDeSalario.Configuration;
 using CalculoDeSalario.Models;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using PayPal.Api;
 using System.Diagnostics;
 
@@ -10,17 +11,21 @@ namespace CalculoDeSalario.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private IToastNotification _toastNotification;
         IConfiguration _configuration;
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration configuration)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor context, IConfiguration configuration, IToastNotification toastNotification)
         {
             _logger = logger;
             httpContextAccessor = context;
             _configuration = configuration;
+            _toastNotification = toastNotification;
         }
 
         public IActionResult Index()
         {
+            _toastNotification.AddInfoToastMessage("Bem vindo de volta!");
+
             return View();
         }
 

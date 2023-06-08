@@ -18,6 +18,8 @@ namespace CalculoDeSalario.Data
         public DbSet<CalculoDeSalario.Models.People> People { get; set; } = default!;
         public DbSet<CalculoDeSalario.Models.Vagas> Vagas { get; set; } = default!;
         public DbSet<CalculoDeSalario.Models.Cargo> Cargo { get; set; } = default!;
+        public DbSet<CalculoDeSalario.Models.Agendamento> Agendamentos { get; set; } = default!;
+        public DbSet<CalculoDeSalario.Models.DatasAgendamento> DatasAgendamentos { get; set; } = default!;
 
 
     }

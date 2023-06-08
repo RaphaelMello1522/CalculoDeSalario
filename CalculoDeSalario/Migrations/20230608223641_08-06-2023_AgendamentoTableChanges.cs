@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CalculoDeSalario.Migrations
 {
     /// <inheritdoc />
-    public partial class _1 : Migration
+    public partial class _08062023_AgendamentoTableChanges : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,6 +62,18 @@ namespace CalculoDeSalario.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cargo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DatasAgendamentos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DataDisponivel = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DatasAgendamentos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,6 +204,25 @@ namespace CalculoDeSalario.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Agendamentos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DataAgendamento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DatasAgendamentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Agendamentos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Agendamentos_DatasAgendamentos_DatasAgendamentoId",
+                        column: x => x.DatasAgendamentoId,
+                        principalTable: "DatasAgendamentos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Salary",
                 columns: table => new
                 {
@@ -234,6 +265,11 @@ namespace CalculoDeSalario.Migrations
                         principalTable: "People",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamentos_DatasAgendamentoId",
+                table: "Agendamentos",
+                column: "DatasAgendamentoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -294,6 +330,9 @@ namespace CalculoDeSalario.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Agendamentos");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -313,6 +352,9 @@ namespace CalculoDeSalario.Migrations
 
             migrationBuilder.DropTable(
                 name: "Vagas");
+
+            migrationBuilder.DropTable(
+                name: "DatasAgendamentos");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
