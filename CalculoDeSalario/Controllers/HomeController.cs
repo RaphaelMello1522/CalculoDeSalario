@@ -1,5 +1,5 @@
 ﻿using CalculoDeSalario.Configuration;
-using CalculoDeSalario.Models;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using PayPal.Api;

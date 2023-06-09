@@ -1,5 +1,6 @@
-﻿using CalculoDeSalario.Data;
-using CalculoDeSalario.Models;
+﻿using DataAccess.Data;
+using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,31 +11,33 @@ namespace CalculoDeSalario.Controllers
     public class PeopleController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IWebHostEnvironment webHostEnvironment;
         private IToastNotification _toastNotification;
 
 
-        public PeopleController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IToastNotification toastNotification)
+        public PeopleController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IToastNotification toastNotification, IUnitOfWork unitOfWork)
         {
             _context = context;
             this.webHostEnvironment = webHostEnvironment;
             _toastNotification = toastNotification;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: People
         public async Task<IActionResult> Index()
         {
-            var contextCount = _context.People.AsNoTracking().ToList().Count();
+            var contextCount = unitOfWork.People.GetAll().Count();
             if (contextCount == 0)
             {
                 _toastNotification.AddWarningToastMessage("Nenhum funcionário registrado");
-                return View(await _context.People.ToListAsync());
+                return View(unitOfWork.People.GetAll().AsEnumerable());
             }
 
             _toastNotification.AddWarningToastMessage(contextCount + " Funcionários registrados");
 
-            return _context.People != null ?
-                        View(await _context.People.AsNoTracking().ToListAsync()) :
+            return unitOfWork.People != null ?
+                        View(unitOfWork.People.GetAll().AsEnumerable()) :
                         Problem("Entity set 'ApplicationDbContext.People'  is null.");
         }
 

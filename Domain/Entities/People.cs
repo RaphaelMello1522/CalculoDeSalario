@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CalculoDeSalario.Models
+namespace Domain.Entities
 {
     public class People
     {

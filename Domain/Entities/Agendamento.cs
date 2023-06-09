@@ -1,4 +1,4 @@
-﻿namespace CalculoDeSalario.Models
+﻿namespace Domain.Entities
 {
     public class Agendamento
     {

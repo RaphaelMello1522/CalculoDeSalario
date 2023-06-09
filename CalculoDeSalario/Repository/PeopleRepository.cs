@@ -1,6 +1,6 @@
-﻿using CalculoDeSalario.Data;
-using CalculoDeSalario.Models;
-using CalculoDeSalario.Repository.IRepository;
+﻿using CalculoDeSalario.Repository.IRepository;
+using DataAccess.Data;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalculoDeSalario.Repository

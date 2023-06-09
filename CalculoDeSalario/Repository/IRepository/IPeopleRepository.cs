@@ -1,4 +1,5 @@
-﻿using CalculoDeSalario.Models;
+﻿
+using Domain.Entities;
 
 namespace CalculoDeSalario.Repository.IRepository
 {

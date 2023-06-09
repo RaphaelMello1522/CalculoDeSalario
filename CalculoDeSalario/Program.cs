@@ -1,9 +1,11 @@
-using CalculoDeSalario.Data;
 using CalculoDeSalario.Repository;
 using CalculoDeSalario.Repository.IRepository;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
+using DataAccess.UnitOfWork;
+using DataAccess.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,7 @@ builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
     Timeout = 500
 });
 builder.Services.AddScoped<ISalaryRepository, SalaryRepository>();
-builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSession();
 
 var app = builder.Build();

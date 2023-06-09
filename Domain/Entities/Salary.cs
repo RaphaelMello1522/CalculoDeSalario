@@ -1,5 +1,4 @@
-﻿namespace CalculoDeSalario.Models
-{
+﻿namespace Domain.Entities { 
     public class Salary
     {
         public Guid Id { get; set; }
