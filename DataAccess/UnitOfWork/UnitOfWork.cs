@@ -16,9 +16,11 @@ namespace DataAccess.UnitOfWork
         {
             this.context = context;
             People = new PeopleRepository(this.context);
+            Cargo = new CargoRepository(this.context);
         }
 
         public IPeopleRepository People { get; private set; }
+        public ICargoRepository Cargo { get; private set; }
 
         public void Dispose()
         {

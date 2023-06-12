@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IPeopleRepository : IGenericRepository<People>
+    public interface ICargoRepository : IGenericRepository<Cargo>
     {
-        Task<People> GetPeopleDetails(Guid? id);
     }
 }

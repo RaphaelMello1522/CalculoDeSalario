@@ -32,7 +32,7 @@ namespace DataAccess.Repository
         {
             return context.Set<T>().ToList();
         }
-        public T GetById(int id)
+        public T GetById(Guid? id)
         {
             return context.Set<T>().Find(id);
         }

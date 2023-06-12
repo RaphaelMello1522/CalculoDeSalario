@@ -12,6 +12,10 @@ namespace Domain.Interfaces
         {
             get;
         }
+        ICargoRepository Cargo
+        {
+            get;
+        }
         int Save();
     }
 }

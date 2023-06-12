@@ -44,13 +44,13 @@ namespace CalculoDeSalario.Controllers
         // GET: People/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.People == null)
+            if (id == null || unitOfWork.People  == null && unitOfWork.Cargo == null)
             {
                 return NotFound();
             }
 
-            var people = await _context.People.Include("Cargo")
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var people = await unitOfWork.People.GetPeopleDetails(id);
+                
 
             if (people.Sexo == "Feminino")
             {
@@ -212,9 +212,9 @@ namespace CalculoDeSalario.Controllers
             return uniqueFileName;
         }
 
-        private void PopulateSelect(object CargoSelecionado = null)
+        private void PopulateSelect(object? CargoSelecionado = null)
         {
-            var cargoQuery = _context.Cargo.AsNoTracking().ToList();
+            var cargoQuery = unitOfWork.Cargo.GetAll().AsEnumerable();
 
             ViewBag.CargoId = new SelectList(cargoQuery, "Id", "NomeCargo", CargoSelecionado);
             return;

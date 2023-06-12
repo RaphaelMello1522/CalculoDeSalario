@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Data;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,17 +14,19 @@ namespace CalculoDeSalario.Controllers
     public class CargoController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CargoController(ApplicationDbContext context)
+        public CargoController(ApplicationDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: Cargo
         public async Task<IActionResult> Index()
         {
-              return _context.Cargo != null ? 
-                          View(await _context.Cargo.ToListAsync()) :
+              return unitOfWork.Cargo != null ? 
+                          View(unitOfWork.Cargo.GetAll().AsEnumerable()) :
                           Problem("Entity set 'ApplicationDbContext.Cargo'  is null.");
         }
 
