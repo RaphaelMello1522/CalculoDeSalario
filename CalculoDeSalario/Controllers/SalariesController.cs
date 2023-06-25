@@ -33,7 +33,7 @@ namespace CalculoDeSalario.Controllers
                 return NotFound();
             }
 
-            var salary = unitOfWork.Salary.Find(s => s.Id == id);
+            var salary = unitOfWork.Salary.Find(s => s.Id == id).FirstOrDefault();
             if (salary == null)
             {
                 return NotFound();
