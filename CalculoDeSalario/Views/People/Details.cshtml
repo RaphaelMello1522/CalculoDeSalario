@@ -7,9 +7,11 @@
 
 <style>
     .img-thumbnail{
-        width: 300px;
-        height: 240px;
-        border-radius: 50%
+        width: 175px;
+        height: 175px;
+        border-radius: 50%;
+        margin-top: 40px;
+        margin-left: 80px;
     }
 
     .h4{
@@ -31,6 +33,9 @@
 
     .descricao{
         text-align: center;
+    }
+    .botoes{
+        margin-left: 80px;
     }
 </style>
 
@@ -58,10 +63,11 @@
             <img class="img-thumbnail" src="~/images/@Model.PictureSource" alt="erro">
             <br/>
             <br/>
+            <div class="botoes">
                 <a asp-action="Edit"  asp-route-id="@Model?.Id">Editar</a> |
                 <a asp-action="Delete"  asp-route-id="@Model?.Id">Remover</a> |
                 <a asp-action="Index">Voltar</a>
-
+            </div>
         </div>
         <div class="col-md-7">
             <p class="descricao">Descrição do Cargo:</p>

@@ -16,6 +16,10 @@ namespace Domain.Interfaces
         {
             get;
         }
+        ISalaryRepository Salary
+        {
+            get;
+        }
         int Save();
     }
 }

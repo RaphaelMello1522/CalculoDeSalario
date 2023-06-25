@@ -1,10 +1,11 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public partial class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext()
         {
@@ -15,13 +16,14 @@ namespace DataAccess.Data
             : base(options)
         {
         }
-        public DbSet<Salary> Salary { get; set; } = default!;
-        public DbSet<People> People { get; set; } = default!;
-        public DbSet<Vagas> Vagas { get; set; } = default!;
-        public DbSet<Cargo> Cargo { get; set; } = default!;
-        public DbSet<Agendamento> Agendamentos { get; set; } = default!;
-        public DbSet<DatasAgendamento> DatasAgendamentos { get; set; } = default!;
+        public virtual DbSet<Agendamento> Agendamentos { get; set; }
 
+        public virtual DbSet<Cargo> Cargos { get; set; }
+
+        public virtual DbSet<DatasAgendamento> DatasAgendamentos { get; set; }
+        public virtual DbSet<People> People { get; set; }
+
+        public virtual DbSet<Salary> Salaries { get; set; }
 
     }
 }

@@ -7,10 +7,10 @@
 
 <style>
     .img-thumbnail {
-       width: 318px;
-       height: 240px;
-       align-content: center;
+        width: 175px;
+       height: 175px;
        border-radius: 20%;
+       margin-left: 20px;
 
     }
     .titulo{
@@ -21,7 +21,7 @@
 
     .card{
         background-color: #FAF0E6;
-        border-radius: 10%;
+        border-radius: 5%;
     }
 
 </style>
@@ -38,13 +38,17 @@
 <div class="row">
 @foreach (var item in Model)
 {
+        <div class="col-sm-2" style="padding-top: 40px">
+            <img class="img-thumbnail" src="~/images/@item.PictureSource" alt="~/images/user.jpg">
+        </div>
+
         <div class="col-md-4" style="padding-top: 40px">
+
             <div class="card" style="width: 20rem; ">
-                    <img class="img-thumbnail" src="~/images/@item.PictureSource" alt="erro">
                     <div class="card-body">
             <h5 class="card-title">@item.Name</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Detalhes</a>
+            <p class="card-text">Atua na empresa desde @DateTime.Now.</p>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Mais detalhes</a>
                 </div>
             </div>
         </div>

@@ -23,13 +23,12 @@ builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
     ProgressBar = true,
     Timeout = 500
 });
-builder.Services.AddScoped<ISalaryRepository, SalaryRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSession();
 
 var app = builder.Build();
 
-//Função para migrar automaticamente ao iniciar o build da aplicação.
+//Funï¿½ï¿½o para migrar automaticamente ao iniciar o build da aplicaï¿½ï¿½o.
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -59,7 +58,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=People}/{action=Index}/{id?}");
 
 app.UseRouting();
 

@@ -17,7 +17,7 @@ namespace DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -59,7 +59,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cargo");
+                    b.ToTable("Cargos");
                 });
 
             modelBuilder.Entity("Domain.Entities.DatasAgendamento", b =>
@@ -132,36 +132,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PeopleId");
 
-                    b.ToTable("Salary");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Vagas", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CandidatosVagaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CardImgUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescricaoVaga")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NomeVaga")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Salario")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CandidatosVagaId");
-
-                    b.ToTable("Vagas");
+                    b.ToTable("Salaries");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -369,7 +340,7 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Domain.Entities.Agendamento", b =>
                 {
                     b.HasOne("Domain.Entities.DatasAgendamento", "DatasAgendamento")
-                        .WithMany()
+                        .WithMany("Agendamentos")
                         .HasForeignKey("DatasAgendamentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -380,7 +351,7 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Domain.Entities.People", b =>
                 {
                     b.HasOne("Domain.Entities.Cargo", "Cargo")
-                        .WithMany()
+                        .WithMany("People")
                         .HasForeignKey("CargoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -397,15 +368,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("People");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Vagas", b =>
-                {
-                    b.HasOne("Domain.Entities.People", "CandidatosVaga")
-                        .WithMany()
-                        .HasForeignKey("CandidatosVagaId");
-
-                    b.Navigation("CandidatosVaga");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -457,6 +419,16 @@ namespace DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Cargo", b =>
+                {
+                    b.Navigation("People");
+                });
+
+            modelBuilder.Entity("Domain.Entities.DatasAgendamento", b =>
+                {
+                    b.Navigation("Agendamentos");
                 });
 #pragma warning restore 612, 618
         }

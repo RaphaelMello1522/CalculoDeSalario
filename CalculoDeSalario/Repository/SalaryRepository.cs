@@ -16,7 +16,7 @@ namespace CalculoDeSalario.Repository
 
         public void AdicionarSalario(Salary salary)
         {
-            context.Salary.Add(salary);
+            context.Salaries.Add(salary);
         }
 
         public void AtualizarSalario(Salary salary)
@@ -26,14 +26,14 @@ namespace CalculoDeSalario.Repository
 
         public Salary BuscarSalarioPorId(Guid salaryID)
         {
-            return context.Salary.Find(salaryID);
+            return context.Salaries.Find(salaryID);
         }
 
         public IEnumerable<Salary> BuscarSalarios()
         {
             var salaryList = new List<Salary>();
             var salary = new Salary();
-            var salaryContext = context.Salary.Include("People").Include("People.Cargo");
+            var salaryContext = context.Salaries.Include("People").Include("People.Cargo");
 
             foreach (var item in salaryContext)
             {
@@ -52,7 +52,7 @@ namespace CalculoDeSalario.Repository
         public void DeletarSalario(Guid salaryID)
         {
             Salary salary = BuscarSalarioPorId(salaryID);
-            context.Salary.Remove(salary);
+            context.Salaries.Remove(salary);
         }
         public void Salvar()
         {

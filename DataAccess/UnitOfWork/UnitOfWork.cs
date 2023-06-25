@@ -17,10 +17,12 @@ namespace DataAccess.UnitOfWork
             this.context = context;
             People = new PeopleRepository(this.context);
             Cargo = new CargoRepository(this.context);
+            Salary = new SalaryRepository(this.context);
         }
 
         public IPeopleRepository People { get; private set; }
         public ICargoRepository Cargo { get; private set; }
+        public ISalaryRepository Salary { get; private set; }
 
         public void Dispose()
         {

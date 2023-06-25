@@ -33,12 +33,12 @@ namespace CalculoDeSalario.Controllers
         // GET: Cargo/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.Cargo == null)
+            if (id == null || _context.Cargos == null)
             {
                 return NotFound();
             }
 
-            var cargo = await _context.Cargo
+            var cargo = await _context.Cargos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cargo == null)
             {
@@ -74,12 +74,12 @@ namespace CalculoDeSalario.Controllers
         // GET: Cargo/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.Cargo == null)
+            if (id == null || _context.Cargos == null)
             {
                 return NotFound();
             }
 
-            var cargo = await _context.Cargo.FindAsync(id);
+            var cargo = await _context.Cargos.FindAsync(id);
             if (cargo == null)
             {
                 return NotFound();
@@ -125,12 +125,12 @@ namespace CalculoDeSalario.Controllers
         // GET: Cargo/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.Cargo == null)
+            if (id == null || _context.Cargos == null)
             {
                 return NotFound();
             }
 
-            var cargo = await _context.Cargo
+            var cargo = await _context.Cargos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cargo == null)
             {
@@ -145,14 +145,14 @@ namespace CalculoDeSalario.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.Cargo == null)
+            if (_context.Cargos == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Cargo'  is null.");
             }
-            var cargo = await _context.Cargo.FindAsync(id);
+            var cargo = await _context.Cargos.FindAsync(id);
             if (cargo != null)
             {
-                _context.Cargo.Remove(cargo);
+                _context.Cargos.Remove(cargo);
             }
             
             await _context.SaveChangesAsync();
@@ -161,7 +161,7 @@ namespace CalculoDeSalario.Controllers
 
         private bool CargoExists(Guid id)
         {
-          return (_context.Cargo?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Cargos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

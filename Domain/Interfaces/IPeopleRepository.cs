@@ -10,5 +10,7 @@ namespace Domain.Interfaces
     public interface IPeopleRepository : IGenericRepository<People>
     {
         Task<People> GetPeopleDetails(Guid? id);
+        IEnumerable<People> GetPeopleWtithCargo();
+
     }
 }

@@ -19,5 +19,11 @@ namespace DataAccess.Repository.TypeRepository
             var peopleDetails = await context.People.Where(d => d.Id.Equals(id)).Include("Cargo").FirstAsync();
             return peopleDetails;
         }
+
+        public IEnumerable<People> GetPeopleWtithCargo()
+        {
+            var peopleDetails = context.People.Include("Cargo").ToList();
+            return peopleDetails;
+        }
     }
 }

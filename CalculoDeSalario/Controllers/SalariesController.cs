@@ -1,6 +1,7 @@
 ﻿using CalculoDeSalario.Repository.IRepository;
 using DataAccess.Data;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -8,33 +9,31 @@ namespace CalculoDeSalario.Controllers
 {
     public class SalariesController : Controller
     {
-        private ISalaryRepository salaryRepository;
-        private IPeopleRepository peopleRepository;
+        private readonly IUnitOfWork unitOfWork;
         private ApplicationDbContext context;
 
-        public SalariesController(ISalaryRepository salaryRepository, IPeopleRepository peopleRepository, ApplicationDbContext context)
+        public SalariesController(ApplicationDbContext context, IUnitOfWork unitOfWork)
         {
-            this.salaryRepository = salaryRepository;
-            this.peopleRepository = peopleRepository;
             this.context = context;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: Salaries
         public async Task<IActionResult> Index()
         {
-            var buscarSalarios = salaryRepository.BuscarSalarios();
+            var buscarSalarios = unitOfWork.Salary.GetSalaries();
             return View(buscarSalarios);
         }
 
         //GET: Salaries/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
-            if (salaryRepository == null)
+            if (unitOfWork.Salary == null)
             {
                 return NotFound();
             }
 
-            var salary = salaryRepository.BuscarSalarioPorId(id);
+            var salary = unitOfWork.Salary.Find(s => s.Id == id);
             if (salary == null)
             {
                 return NotFound();
@@ -60,15 +59,15 @@ namespace CalculoDeSalario.Controllers
         {
             salary.Id = Guid.NewGuid();
             salary.TotalTimeWorked = salary.TimeWorkEnd - salary.TimeWorkStart;
-            var salaryPerson = peopleRepository.BuscarPessoas().Where(s => s.Id.Equals(salary.PeopleId));
+            var salaryPerson = unitOfWork.People.GetPeopleWtithCargo().Where(s => s.Id.Equals(salary.PeopleId));
 
             foreach (var item in salaryPerson)
             {
                 salary.Total = salary.TotalTimeWorked.TotalHours * Convert.ToDouble(item.Cargo.ValueHour);
             }
 
-            salaryRepository.AdicionarSalario(salary);
-            salaryRepository.Salvar();
+            unitOfWork.Salary.Add(salary);
+            unitOfWork.Save();
             return RedirectToAction(nameof(Index));
 
         }
@@ -168,7 +167,7 @@ namespace CalculoDeSalario.Controllers
 
         private void PopulateAvaliado(object PessoaSelecionada = null)
         {
-            var pessoaQuery = peopleRepository.BuscarPessoas();
+            var pessoaQuery = unitOfWork.People.GetAll();
 
             ViewBag.PessoaAvaliadoId = new SelectList(pessoaQuery, "Id", "Name", PessoaSelecionada);
             return;

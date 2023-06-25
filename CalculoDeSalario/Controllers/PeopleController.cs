@@ -51,7 +51,6 @@ namespace CalculoDeSalario.Controllers
 
             var people = await unitOfWork.People.GetPeopleDetails(id);
                 
-
             if (people.Sexo == "Feminino")
             {
                 _toastNotification.AddInfoToastMessage("Detalhes da funcionária " + people.Name);
@@ -80,7 +79,7 @@ namespace CalculoDeSalario.Controllers
         {
             people.Id = Guid.NewGuid();
 
-            var cargoPerson = _context.Cargo.ToList().Where(s => s.Id.Equals(people.CargoId));
+            var cargoPerson = _context.Cargos.ToList().Where(s => s.Id.Equals(people.CargoId));
 
             string uniqueFileName = UploadedFile(people);
 
